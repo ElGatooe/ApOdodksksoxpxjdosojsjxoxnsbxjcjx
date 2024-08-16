@@ -1,8 +1,7 @@
 local TweenService = game:GetService("TweenService")
-local HttpService = game:GetService("HttpService")
 
--- Replace this with GitHub raw link containing the keys
-local keyURL = "https://raw.githubusercontent.com/ElGatooe/Key/main/KeySystem"
+-- Hardcoded key
+local validKey = "YOUR_HARDCODED_KEY_HERE" -- Replace this with your actual key
 
 -- Create ScreenGui
 local screenGui = Instance.new("ScreenGui")
@@ -150,34 +149,19 @@ local function showNotification(message, color)
     notificationFrame.Visible = false
 end
 
--- Function to fetch keys from GitHub
-local function fetchKeys()
-    local success, keys = pcall(function()
-        return HttpService:GetAsync(keyURL)
-    end)
-
-    if success then
-        return keys
-    else
-        warn("Failed to fetch keys from GitHub")
-        return nil
-    end
-end
-
 -- Function to handle the key check
 checkButton.MouseButton1Click:Connect(function()
     local key = keyBox.Text
-    local keys = fetchKeys()
     
-    if keys and string.find(keys, key) then
+    if key == validKey then
         showNotification("Key Validated!", Color3.fromRGB(76, 175, 80)) -- Green for success
     else
         showNotification("Invalid Key, Please Try Again.")
     end
 end)
 
--- Function to open the GitHub link for the key
+-- Function to open the GitHub link for the key (Optional)
 getKeyButton.MouseButton1Click:Connect(function()
-    setclipboard("https://raw.githubusercontent.com/ElGatooe/Key/main/KeySystem") -- Replace with your website or key provider
-    showNotification("Key link copied to clipboard!", Color3.fromRGB(0, 122, 204)) -- Blue for info
+    setclipboard("YOUR_HARD_CODED_KEY_HERE") -- Set the key here or update as needed
+    showNotification("Key copied to clipboard!", Color3.fromRGB(0, 122, 204)) -- Blue for info
 end)
