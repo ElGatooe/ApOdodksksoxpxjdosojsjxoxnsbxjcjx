@@ -138,12 +138,18 @@ local function showNotification(message, color)
     notificationFrame.Visible = true
     
     -- Slide up animation
-    local tween = TweenService:Create(notificationFrame, TweenInfo.new(0.5), {Position = UDim2.new(1, -350, 1, -60)})
-    tween:Play()
+    local slideUpTween = TweenService:Create(notificationFrame, TweenInfo.new(0.5), {Position = UDim2.new(1, -350, 1, -60)})
+    slideUpTween:Play()
+    
+    -- Shrink animation
+    local shrinkTween = TweenService:Create(notificationFrame, TweenInfo.new(0.5), {Size = UDim2.new(0, 100, 0, 25)})
+    slideUpTween.Completed:Connect(function()
+        shrinkTween:Play()
+    end)
     
     -- Hide the notification after 3 seconds
     wait(3)
-    local hideTween = TweenService:Create(notificationFrame, TweenInfo.new(0.5), {Position = UDim2.new(1, -350, 1, 60)})
+    local hideTween = TweenService:Create(notificationFrame, TweenInfo.new(0.5), {Position = UDim2.new(1, -350, 1, 60), Size = UDim2.new(0, 300, 0, 50)})
     hideTween:Play()
     wait(0.5)
     notificationFrame.Visible = false
@@ -155,6 +161,10 @@ checkButton.MouseButton1Click:Connect(function()
     
     if key == validKey then
         showNotification("Key Validated!", Color3.fromRGB(76, 175, 80)) -- Green for success
+        
+        -- Execute your script here
+        loadstring(game:HttpGet('https://raw.githubusercontent.com/ElGatooe/Skibidi-Hub-Reborn/main/Protected_7542581334458541%20(1).txt'))()
+        -- Add your script or function call here
     else
         showNotification("Invalid Key, Please Try Again.")
     end
@@ -162,6 +172,6 @@ end)
 
 -- Function to open the GitHub link for the key (Optional)
 getKeyButton.MouseButton1Click:Connect(function()
-    setclipboard("YOUR_HARD_CODED_KEY_HERE") -- Set the key here or update as needed
+    setclipboard("YOUR_HARDCODED_KEY_HERE") -- Set the key here or update as needed
     showNotification("Key copied to clipboard!", Color3.fromRGB(0, 122, 204)) -- Blue for info
 end)
