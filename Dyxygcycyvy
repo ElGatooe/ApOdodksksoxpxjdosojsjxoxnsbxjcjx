@@ -1,0 +1,183 @@
+local TweenService = game:GetService("TweenService")
+local HttpService = game:GetService("HttpService")
+
+-- Replace this with GitHub raw link containing the keys
+local keyURL = "https://raw.githubusercontent.com/ElGatooe/Key/main/KeySystem"
+
+-- Create ScreenGui
+local screenGui = Instance.new("ScreenGui")
+screenGui.Parent = game.CoreGui
+
+-- Create Frame (Background)
+local frame = Instance.new("Frame")
+frame.Size = UDim2.new(0, 400, 0, 250)
+frame.Position = UDim2.new(0.5, -200, 0.5, -125)
+frame.BackgroundColor3 = Color3.fromRGB(34, 34, 34)
+frame.BorderSizePixel = 0
+frame.Parent = screenGui
+
+-- Add UI Corner (rounded corners)
+local uiCorner = Instance.new("UICorner")
+uiCorner.CornerRadius = UDim.new(0, 10)
+uiCorner.Parent = frame
+
+-- Create Title Label
+local titleLabel = Instance.new("TextLabel")
+titleLabel.Size = UDim2.new(1, 0, 0.2, 0)
+titleLabel.Position = UDim2.new(0, 0, 0, 0)
+titleLabel.BackgroundTransparency = 1
+titleLabel.Text = "[Skibidi Hub] Key System"
+titleLabel.Font = Enum.Font.GothamBold
+titleLabel.TextSize = 24
+titleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+titleLabel.Parent = frame
+
+-- Create TextBox (Key Input)
+local keyBox = Instance.new("TextBox")
+keyBox.Size = UDim2.new(0.8, 0, 0.2, 0)
+keyBox.Position = UDim2.new(0.1, 0, 0.3, 0)
+keyBox.PlaceholderText = "Insert Key Here"
+keyBox.Font = Enum.Font.Gotham
+keyBox.TextSize = 18
+keyBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+keyBox.BackgroundColor3 = Color3.fromRGB(44, 44, 44)
+keyBox.BorderSizePixel = 0
+keyBox.Parent = frame
+
+-- Add UI Corner to the TextBox
+local uiCornerTextBox = Instance.new("UICorner")
+uiCornerTextBox.CornerRadius = UDim.new(0, 5)
+uiCornerTextBox.Parent = keyBox
+
+-- Create Button (Get Key)
+local getKeyButton = Instance.new("TextButton")
+getKeyButton.Size = UDim2.new(0.8, 0, 0.15, 0)
+getKeyButton.Position = UDim2.new(0.1, 0, 0.55, 0)
+getKeyButton.Text = "Get Key"
+getKeyButton.Font = Enum.Font.GothamBold
+getKeyButton.TextSize = 18
+getKeyButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+getKeyButton.BackgroundColor3 = Color3.fromRGB(0, 122, 204)
+getKeyButton.BorderSizePixel = 0
+getKeyButton.Parent = frame
+
+-- Add UI Corner to the Get Key Button
+local uiCornerGetKey = Instance.new("UICorner")
+uiCornerGetKey.CornerRadius = UDim.new(0, 5)
+uiCornerGetKey.Parent = getKeyButton
+
+-- Create Button (Check Key)
+local checkButton = Instance.new("TextButton")
+checkButton.Size = UDim2.new(0.8, 0, 0.15, 0)
+checkButton.Position = UDim2.new(0.1, 0, 0.75, 0)
+checkButton.Text = "Check Key"
+checkButton.Font = Enum.Font.GothamBold
+checkButton.TextSize = 18
+checkButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+checkButton.BackgroundColor3 = Color3.fromRGB(0, 122, 204)
+checkButton.BorderSizePixel = 0
+checkButton.Parent = frame
+
+-- Add UI Corner to the Check Key Button
+local uiCornerCheckKey = Instance.new("UICorner")
+uiCornerCheckKey.CornerRadius = UDim.new(0, 5)
+uiCornerCheckKey.Parent = checkButton
+
+-- Create Notification Frame
+local notificationFrame = Instance.new("Frame")
+notificationFrame.Size = UDim2.new(0, 300, 0, 50)
+notificationFrame.Position = UDim2.new(1, -350, 1, -60) -- Initially off-screen, bottom-right
+notificationFrame.BackgroundColor3 = Color3.fromRGB(255, 69, 58) -- Red color for error
+notificationFrame.BorderSizePixel = 0
+notificationFrame.Visible = false
+notificationFrame.Parent = screenGui
+
+-- Add UI Corner to the Notification Frame
+local uiCornerNotification = Instance.new("UICorner")
+uiCornerNotification.CornerRadius = UDim.new(0, 5)
+uiCornerNotification.Parent = notificationFrame
+
+-- Create Notification Text
+local notificationText = Instance.new("TextLabel")
+notificationText.Size = UDim2.new(1, 0, 1, 0)
+notificationText.Position = UDim2.new(0, 0, 0, 0)
+notificationText.BackgroundTransparency = 1
+notificationText.Text = "Invalid Key, Please Try Again."
+notificationText.Font = Enum.Font.GothamBold
+notificationText.TextSize = 18
+notificationText.TextColor3 = Color3.fromRGB(255, 255, 255)
+notificationText.Parent = notificationFrame
+
+-- Button Hover Effect (Get Key Button)
+getKeyButton.MouseEnter:Connect(function()
+    local tween = TweenService:Create(getKeyButton, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(10, 142, 224)})
+    tween:Play()
+end)
+
+getKeyButton.MouseLeave:Connect(function()
+    local tween = TweenService:Create(getKeyButton, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(0, 122, 204)})
+    tween:Play()
+end)
+
+-- Button Hover Effect (Check Key Button)
+checkButton.MouseEnter:Connect(function()
+    local tween = TweenService:Create(checkButton, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(10, 142, 224)})
+    tween:Play()
+end)
+
+checkButton.MouseLeave:Connect(function()
+    local tween = TweenService:Create(checkButton, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(0, 122, 204)})
+    tween:Play()
+end)
+
+-- Function to show notification
+local function showNotification(message, color)
+    notificationText.Text = message
+    notificationFrame.BackgroundColor3 = color or Color3.fromRGB(255, 69, 58) -- Default to red
+    
+    notificationFrame.Position = UDim2.new(1, -350, 1, 60) -- Reset to off-screen, bottom-right
+    notificationFrame.Visible = true
+    
+    -- Slide up animation
+    local tween = TweenService:Create(notificationFrame, TweenInfo.new(0.5), {Position = UDim2.new(1, -350, 1, -60)})
+    tween:Play()
+    
+    -- Hide the notification after 3 seconds
+    wait(3)
+    local hideTween = TweenService:Create(notificationFrame, TweenInfo.new(0.5), {Position = UDim2.new(1, -350, 1, 60)})
+    hideTween:Play()
+    wait(0.5)
+    notificationFrame.Visible = false
+end
+
+-- Function to fetch keys from GitHub
+local function fetchKeys()
+    local success, keys = pcall(function()
+        return HttpService:GetAsync(keyURL)
+    end)
+
+    if success then
+        return keys
+    else
+        warn("Failed to fetch keys from GitHub")
+        return nil
+    end
+end
+
+-- Function to handle the key check
+checkButton.MouseButton1Click:Connect(function()
+    local key = keyBox.Text
+    local keys = fetchKeys()
+    
+    if keys and string.find(keys, key) then
+        showNotification("Key Validated!", Color3.fromRGB(76, 175, 80)) -- Green for success
+    else
+        showNotification("Invalid Key, Please Try Again.")
+    end
+end)
+
+-- Function to open the GitHub link for the key
+getKeyButton.MouseButton1Click:Connect(function()
+    setclipboard("https://raw.githubusercontent.com/ElGatooe/Key/main/KeySystem") -- Replace with your website or key provider
+    showNotification("Key link copied to clipboard!", Color3.fromRGB(0, 122, 204)) -- Blue for info
+end)
