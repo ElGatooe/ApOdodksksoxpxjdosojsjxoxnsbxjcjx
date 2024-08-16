@@ -2,7 +2,7 @@ local TweenService = game:GetService("TweenService")
 local HttpService = game:GetService("HttpService")
 
 -- Replace this with GitHub raw link containing the keys
-local keyURL = "https://raw.githubusercontent.com/ElGatooe/Key/main/KeySystem"
+local keyURL = https://raw.githubusercontent.com/ElGatooe/Key/main/KeySystem
 
 -- Create ScreenGui
 local screenGui = Instance.new("ScreenGui")
