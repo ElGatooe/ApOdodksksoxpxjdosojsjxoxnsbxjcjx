@@ -1,4 +1,5 @@
 local TweenService = game:GetService("TweenService")
+local UserInputService = game:GetService("UserInputService")
 
 -- Hardcoded key
 local validKey = "YOUR_HARDCODED_KEY_HERE" -- Replace this with your actual key
@@ -82,77 +83,43 @@ local uiCornerCheckKey = Instance.new("UICorner")
 uiCornerCheckKey.CornerRadius = UDim.new(0, 5)
 uiCornerCheckKey.Parent = checkButton
 
--- Create Notification Frame
-local notificationFrame = Instance.new("Frame")
-notificationFrame.Size = UDim2.new(0, 300, 0, 50)
-notificationFrame.Position = UDim2.new(1, -350, 1, -60) -- Initially off-screen, bottom-right
-notificationFrame.BackgroundColor3 = Color3.fromRGB(255, 69, 58) -- Red color for error
-notificationFrame.BorderSizePixel = 0
-notificationFrame.Visible = false
-notificationFrame.Parent = screenGui
+-- Function to make the frame draggable
+local function makeDraggable(gui)
+    local dragInput, dragStart, startPos
 
--- Add UI Corner to the Notification Frame
-local uiCornerNotification = Instance.new("UICorner")
-uiCornerNotification.CornerRadius = UDim.new(0, 5)
-uiCornerNotification.Parent = notificationFrame
+    local function update(input)
+        local delta = input.Position - dragStart
+        gui.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+    end
 
--- Create Notification Text
-local notificationText = Instance.new("TextLabel")
-notificationText.Size = UDim2.new(1, 0, 1, 0)
-notificationText.Position = UDim2.new(0, 0, 0, 0)
-notificationText.BackgroundTransparency = 1
-notificationText.Text = "Invalid Key, Please Try Again."
-notificationText.Font = Enum.Font.GothamBold
-notificationText.TextSize = 18
-notificationText.TextColor3 = Color3.fromRGB(255, 255, 255)
-notificationText.Parent = notificationFrame
+    gui.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            dragInput = input
+            dragStart = input.Position
+            startPos = gui.Position
 
--- Button Hover Effect (Get Key Button)
-getKeyButton.MouseEnter:Connect(function()
-    local tween = TweenService:Create(getKeyButton, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(10, 142, 224)})
-    tween:Play()
-end)
-
-getKeyButton.MouseLeave:Connect(function()
-    local tween = TweenService:Create(getKeyButton, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(0, 122, 204)})
-    tween:Play()
-end)
-
--- Button Hover Effect (Check Key Button)
-checkButton.MouseEnter:Connect(function()
-    local tween = TweenService:Create(checkButton, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(10, 142, 224)})
-    tween:Play()
-end)
-
-checkButton.MouseLeave:Connect(function()
-    local tween = TweenService:Create(checkButton, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(0, 122, 204)})
-    tween:Play()
-end)
-
--- Function to show notification
-local function showNotification(message, color)
-    notificationText.Text = message
-    notificationFrame.BackgroundColor3 = color or Color3.fromRGB(255, 69, 58) -- Default to red
-    
-    notificationFrame.Position = UDim2.new(1, -350, 1, 60) -- Reset to off-screen, bottom-right
-    notificationFrame.Visible = true
-    
-    -- Slide up animation
-    local slideUpTween = TweenService:Create(notificationFrame, TweenInfo.new(0.5), {Position = UDim2.new(1, -350, 1, -60)})
-    slideUpTween:Play()
-    
-    -- Shrink animation
-    local shrinkTween = TweenService:Create(notificationFrame, TweenInfo.new(0.5), {Size = UDim2.new(0, 100, 0, 25)})
-    slideUpTween.Completed:Connect(function()
-        shrinkTween:Play()
+            input.Changed:Connect(function()
+                if input.UserInputState == Enum.UserInputState.End then
+                    dragInput = nil
+                end
+            end)
+        end
     end)
-    
-    -- Hide the notification after 3 seconds
-    wait(3)
-    local hideTween = TweenService:Create(notificationFrame, TweenInfo.new(0.5), {Position = UDim2.new(1, -350, 1, 60), Size = UDim2.new(0, 300, 0, 50)})
-    hideTween:Play()
-    wait(0.5)
-    notificationFrame.Visible = false
+
+    UserInputService.InputChanged:Connect(function(input)
+        if input == dragInput then
+            update(input)
+        end
+    end)
+end
+
+-- Make the main frame draggable
+makeDraggable(frame)
+
+-- Function to show a shrinking animation
+local function shrinkFrame()
+    local shrinkTween = TweenService:Create(frame, TweenInfo.new(0.5), {Size = UDim2.new(0, 200, 0, 125)})
+    shrinkTween:Play()
 end
 
 -- Function to handle the key check
@@ -160,18 +127,19 @@ checkButton.MouseButton1Click:Connect(function()
     local key = keyBox.Text
     
     if key == validKey then
-        showNotification("Key Validated!", Color3.fromRGB(76, 175, 80)) -- Green for success
-        
+        -- Shrink the frame
+        shrinkFrame()
+
         -- Execute your script here
-        loadstring(game:HttpGet('https://raw.githubusercontent.com/ElGatooe/Skibidi-Hub-Reborn/main/Protected_7542581334458541%20(1).txt'))()
+        print("Key is valid. Executing script...")
         -- Add your script or function call here
     else
-        showNotification("Invalid Key, Please Try Again.")
+        print("Invalid Key, Please Try Again.")
     end
 end)
 
 -- Function to open the GitHub link for the key (Optional)
 getKeyButton.MouseButton1Click:Connect(function()
     setclipboard("YOUR_HARDCODED_KEY_HERE") -- Set the key here or update as needed
-    showNotification("Key copied to clipboard!", Color3.fromRGB(0, 122, 204)) -- Blue for info
+    print("Key copied to clipboard!") -- Notify that key was copied
 end)
